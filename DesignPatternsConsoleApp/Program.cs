@@ -5,8 +5,22 @@ using DesignPatternsConsoleApp.Creational.Builder;
 using DesignPatternsConsoleApp.Creational.Prototype;
 using DesignPatternsConsoleApp.Structural.Adapter;
 using DesignPatternsConsoleApp.Structural.Decorator;
+using DesignPatternsConsoleApp.Structural.Bridge;
+using DesignPatternsConsoleApp.Structural.Composite;
+using DesignPatternsConsoleApp.Structural.Facade;
+using DesignPatternsConsoleApp.Structural.Proxy;
 using DesignPatternsConsoleApp.Behavioral.Observer;
 using DesignPatternsConsoleApp.Behavioral.Strategy;
+using DesignPatternsConsoleApp.Behavioral.Command;
+using DesignPatternsConsoleApp.Behavioral.State;
+using DesignPatternsConsoleApp.Behavioral.TemplateMethod;
+using DesignPatternsConsoleApp.Behavioral.ChainOfResponsibility;
+using DesignPatternsConsoleApp.Behavioral.Mediator;
+using DesignPatternsConsoleApp.Behavioral.Memento;
+using DesignPatternsConsoleApp.Behavioral.Visitor;
+using DesignPatternsConsoleApp.Behavioral.Iterator;
+using DesignPatternsConsoleApp.Behavioral.Interpreter;
+using DesignPatternsConsoleApp.Structural.Flyweight;
 
 namespace DesignPatternsConsoleApp;
 
@@ -185,6 +199,11 @@ class Program
 
         DemonstrateAdapterPattern();
         DemonstrateDecoratorPattern();
+        DemonstrateBridgePattern();
+        DemonstrateCompositePattern();
+        DemonstrateFacadePattern();
+        DemonstrateProxyPattern();
+        DemonstrateFlyweightPattern();
 
         Console.WriteLine();
     }
@@ -242,6 +261,15 @@ class Program
 
         DemonstrateObserverPattern();
         DemonstrateStrategyPattern();
+        DemonstrateCommandPattern();
+        DemonstrateStatePattern();
+        DemonstrateTemplateMethodPattern();
+        DemonstrateChainOfResponsibilityPattern();
+        DemonstrateMediatorPattern();
+        DemonstrateMementoPattern();
+        DemonstrateVisitorPattern();
+        DemonstrateIteratorPattern();
+        DemonstrateInterpreterPattern();
 
         Console.WriteLine();
     }
@@ -286,6 +314,317 @@ class Program
 
         processor.SetPaymentStrategy(new BankTransferPayment());
         processor.ProcessPayment(1000.00m);
+        Console.WriteLine();
+    }
+
+    static void DemonstrateBridgePattern()
+    {
+        Console.WriteLine("🔹 BRIDGE PATTERN");
+        Console.WriteLine("Separates abstraction from implementation\n");
+
+        IRenderer vectorRenderer = new VectorRenderer();
+        IRenderer rasterRenderer = new RasterRenderer();
+
+        Shape[] shapes = {
+            new Circle(vectorRenderer, 5.0f),
+            new Circle(rasterRenderer, 5.0f),
+            new Square(vectorRenderer, 4.0f),
+            new Square(rasterRenderer, 4.0f)
+        };
+
+        foreach (var shape in shapes)
+        {
+            shape.Draw();
+        }
+        Console.WriteLine();
+    }
+
+    static void DemonstrateCompositePattern()
+    {
+        Console.WriteLine("🔹 COMPOSITE PATTERN");
+        Console.WriteLine("Composes objects into tree structures\n");
+
+        var root = new Structural.Composite.Directory("Root");
+        var documents = new Structural.Composite.Directory("Documents");
+        var images = new Structural.Composite.Directory("Images");
+        var downloads = new Structural.Composite.Directory("Downloads");
+
+        documents.Add(new Structural.Composite.File("report.docx", 1024));
+        documents.Add(new Structural.Composite.File("presentation.pptx", 2048));
+
+        images.Add(new Structural.Composite.File("photo1.jpg", 512));
+        images.Add(new Structural.Composite.File("photo2.png", 768));
+
+        downloads.Add(new Structural.Composite.File("software.exe", 5120));
+        downloads.Add(new Structural.Composite.File("document.pdf", 256));
+
+        root.Add(documents);
+        root.Add(images);
+        root.Add(downloads);
+
+        root.Display();
+        Console.WriteLine();
+    }
+
+    static void DemonstrateFacadePattern()
+    {
+        Console.WriteLine("🔹 FACADE PATTERN");
+        Console.WriteLine("Provides a simplified interface to a complex subsystem\n");
+
+        var computer = new ComputerFacade();
+        
+        computer.StartComputer();
+        computer.RunApplication();
+        computer.ShutdownComputer();
+    }
+
+    static void DemonstrateProxyPattern()
+    {
+        Console.WriteLine("🔹 PROXY PATTERN");
+        Console.WriteLine("Provides a placeholder for another object\n");
+
+        Console.WriteLine("Creating proxy for image1.jpg...");
+        var imageProxy = new ImageProxy("image1.jpg");
+        
+        Console.WriteLine("First display (will load from disk):");
+        imageProxy.Display();
+        
+        Console.WriteLine("Second display (will use cached version):");
+        imageProxy.Display();
+        Console.WriteLine();
+    }
+
+    static void DemonstrateCommandPattern()
+    {
+        Console.WriteLine("🔹 COMMAND PATTERN");
+        Console.WriteLine("Encapsulates a request as an object\n");
+
+        var light = new Light();
+        var lightOnCommand = new LightOnCommand(light);
+        var lightOffCommand = new LightOffCommand(light);
+        var remote = new RemoteControl();
+
+        remote.SetCommand(lightOnCommand);
+        remote.PressButton();
+
+        remote.SetCommand(lightOffCommand);
+        remote.PressButton();
+
+        remote.PressUndo();
+        Console.WriteLine();
+    }
+
+    static void DemonstrateStatePattern()
+    {
+        Console.WriteLine("🔹 STATE PATTERN");
+        Console.WriteLine("Allows an object to alter its behavior when its internal state changes\n");
+
+        var vendingMachine = new VendingMachine();
+
+        vendingMachine.DisplayStatus();
+        vendingMachine.InsertMoney(2.00m);
+        vendingMachine.DisplayStatus();
+        
+        vendingMachine.SelectProduct("Coke");
+        vendingMachine.DisplayStatus();
+        
+        vendingMachine.DispenseProduct();
+        vendingMachine.DisplayStatus();
+        Console.WriteLine();
+    }
+
+    static void DemonstrateTemplateMethodPattern()
+    {
+        Console.WriteLine("🔹 TEMPLATE METHOD PATTERN");
+        Console.WriteLine("Defines the skeleton of an algorithm in a method\n");
+
+        DataProcessor[] processors = {
+            new CsvDataProcessor(),
+            new XmlDataProcessor()
+        };
+
+        foreach (var processor in processors)
+        {
+            processor.ProcessData();
+        }
+    }
+
+    static void DemonstrateFlyweightPattern()
+    {
+        Console.WriteLine("🔹 FLYWEIGHT PATTERN");
+        Console.WriteLine("Minimizes memory usage by sharing intrinsic state\n");
+
+        var treeFactory = new TreeTypeFactory();
+        var trees = new List<Tree>();
+
+        // Create trees with shared flyweights
+        var oakType = treeFactory.GetTreeType("Oak", "Green", "Rough");
+        var pineType = treeFactory.GetTreeType("Pine", "Dark Green", "Smooth");
+        var oakType2 = treeFactory.GetTreeType("Oak", "Green", "Rough"); // Should reuse
+
+        trees.Add(new Tree(oakType, 10, 20));
+        trees.Add(new Tree(pineType, 15, 25));
+        trees.Add(new Tree(oakType2, 20, 30));
+
+        Console.WriteLine($"Total TreeType objects created: {treeFactory.GetTreeTypeCount()}");
+        Console.WriteLine("Drawing all trees:");
+        foreach (var tree in trees)
+        {
+            tree.Draw();
+        }
+        Console.WriteLine();
+    }
+
+    static void DemonstrateChainOfResponsibilityPattern()
+    {
+        Console.WriteLine("🔹 CHAIN OF RESPONSIBILITY PATTERN");
+        Console.WriteLine("Passes requests along a chain of handlers\n");
+
+        var manager = new ManagerHandler();
+        var director = new DirectorHandler();
+        var ceo = new CeoHandler();
+
+        manager.SetNext(director).SetNext(ceo);
+
+        var requests = new[]
+        {
+            new Request("Purchase", 500, "Office supplies"),
+            new Request("Equipment", 2500, "New computer"),
+            new Request("Travel", 7500, "Business trip"),
+            new Request("Facility", 15000, "Office renovation")
+        };
+
+        foreach (var request in requests)
+        {
+            Console.WriteLine($"Processing {request.Type} request for ${request.Amount}");
+            manager.Handle(request);
+            Console.WriteLine();
+        }
+    }
+
+    static void DemonstrateMediatorPattern()
+    {
+        Console.WriteLine("🔹 MEDIATOR PATTERN");
+        Console.WriteLine("Defines how objects interact with each other\n");
+
+        var chatMediator = new ChatMediator();
+        var alice = new User("Alice", chatMediator);
+        var bob = new User("Bob", chatMediator);
+        var charlie = new User("Charlie", chatMediator);
+
+        chatMediator.AddUser(alice);
+        chatMediator.AddUser(bob);
+        chatMediator.AddUser(charlie);
+
+        alice.SendMessage("Hello everyone!");
+        bob.SendMessage("Hi Alice!");
+        charlie.SendMessage("Good morning!");
+        Console.WriteLine();
+    }
+
+    static void DemonstrateMementoPattern()
+    {
+        Console.WriteLine("🔹 MEMENTO PATTERN");
+        Console.WriteLine("Captures and restores an object's internal state\n");
+
+        var textEditor = new TextEditor();
+        var caretaker = new Caretaker(textEditor);
+
+        textEditor.Content = "Hello World";
+        caretaker.Save();
+
+        textEditor.Content = "Hello Beautiful World";
+        caretaker.Save();
+
+        textEditor.Content = "Hello Amazing Beautiful World";
+        caretaker.Save();
+
+        caretaker.ShowHistory();
+        Console.WriteLine();
+
+        caretaker.Undo();
+        caretaker.Undo();
+        Console.WriteLine();
+    }
+
+    static void DemonstrateVisitorPattern()
+    {
+        Console.WriteLine("🔹 VISITOR PATTERN");
+        Console.WriteLine("Separates algorithms from the objects they operate on\n");
+
+        var products = new List<IProduct>
+        {
+            new Book("Clean Code", 45.99m, "Robert Martin"),
+            new Electronics("Laptop", 1299.99m, "Dell"),
+            new Clothing("T-Shirt", 19.99m, "M"),
+            new Book("Design Patterns", 59.99m, "Gang of Four")
+        };
+
+        var taxCalculator = new TaxCalculator();
+        var discountCalculator = new DiscountCalculator();
+
+        Console.WriteLine("Calculating taxes:");
+        foreach (var product in products)
+        {
+            product.Accept(taxCalculator);
+        }
+        Console.WriteLine($"Total tax: ${taxCalculator.GetTotalTax():F2}");
+        Console.WriteLine();
+
+        Console.WriteLine("Calculating discounts:");
+        foreach (var product in products)
+        {
+            product.Accept(discountCalculator);
+        }
+        Console.WriteLine($"Total discount: ${discountCalculator.GetTotalDiscount():F2}");
+        Console.WriteLine();
+    }
+
+    static void DemonstrateIteratorPattern()
+    {
+        Console.WriteLine("🔹 ITERATOR PATTERN");
+        Console.WriteLine("Provides a way to access elements of a collection sequentially\n");
+
+        var playlist = new Playlist();
+        playlist.AddSong(new Song("Bohemian Rhapsody", "Queen", TimeSpan.FromMinutes(5).Add(TimeSpan.FromSeconds(55))));
+        playlist.AddSong(new Song("Hotel California", "Eagles", TimeSpan.FromMinutes(6).Add(TimeSpan.FromSeconds(30))));
+        playlist.AddSong(new Song("Stairway to Heaven", "Led Zeppelin", TimeSpan.FromMinutes(8).Add(TimeSpan.FromSeconds(2))));
+
+        var iterator = playlist.CreateIterator();
+        int trackNumber = 1;
+
+        Console.WriteLine("Playing playlist:");
+        while (iterator.HasNext())
+        {
+            var song = iterator.Next();
+            Console.WriteLine($"Track {trackNumber}: {song}");
+            trackNumber++;
+        }
+        Console.WriteLine();
+    }
+
+    static void DemonstrateInterpreterPattern()
+    {
+        Console.WriteLine("🔹 INTERPRETER PATTERN");
+        Console.WriteLine("Defines a grammar and provides an interpreter for it\n");
+
+        var calculator = new Calculator();
+
+        var expressions = new[]
+        {
+            "5",
+            "5 + 3",
+            "10 - 4",
+            "6 * 2",
+            "10 + 5 - 3",
+            "4 * 2 + 1"
+        };
+
+        foreach (var expression in expressions)
+        {
+            var result = calculator.Calculate(expression);
+            Console.WriteLine($"{expression} = {result}");
+        }
         Console.WriteLine();
     }
 }
